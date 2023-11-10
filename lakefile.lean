@@ -6,6 +6,6 @@ package «lean_pdist» {
 }
 
 @[default_target]
-lean_lib «LeanPdist» {
+lean_lib «PDist» {
   -- add library configuration options here
 }
