@@ -1,3 +1,4 @@
+import Std.Data.List.Init.Lemmas
 import Lean
 
 universe u
@@ -33,6 +34,14 @@ def uniformList (L : List α) (hL : L ≠ [] := by decide) : PDist α := do
         return L[i]' (by simp [h, i.isLt])
     | 0 => False.elim <| hL <| by { induction L ; rfl ; simp at h }
 
+def uniformListWithProof (L : List α) (hL : L ≠ [] := by decide) :
+    PDist ((a : α) ×' (a ∈ L)) := do
+  match h : L.length with
+    | n+1 =>
+        let i ← uniformFin (n + 1) Nat.noConfusion
+        return ⟨L[i]' (by simp [h, i.isLt]), List.get_mem _ _ _⟩
+    | 0 => False.elim <| hL <| by { induction L ; rfl ; simp at h }
+
 def uniformList? (L : List α) : PDist (Option α) :=
   match L with
     | [] => return none
@@ -61,7 +70,6 @@ def stdNormal (res := 2147483562) : PDist Float := do
 
 def normal (μ σ : Float) (res := 2147483562) : PDist Float :=
   return μ + σ * (← stdNormal res)
-
 
 def randomList (d : PDist α) (length : Nat) :
     PDist (List α) :=
