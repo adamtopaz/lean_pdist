@@ -50,3 +50,14 @@ def stdUniform (res := 2147483562) : PDist Float :=
 
 def uniform (a b : Float) (res := 2147483562) : PDist Float :=
   return a + (b - a) * (← stdUniform res)
+
+def PI : Float :=
+  3.14159265358979323846264338327950288419716939937510582097494459230781640628620899862803482534211
+
+def stdNormal (res := 2147483562) : PDist Float := do
+  let u₁ ← stdUniform res
+  let u₂ ← stdUniform res
+  return Float.sqrt (-2 * Float.log u₁) * Float.cos (2 * PI * u₂)
+
+def normal (μ σ : Float) (res := 2147483562) : PDist Float :=
+  return μ + σ * (← stdNormal res)
