@@ -62,8 +62,14 @@ def stdNormal (res := 2147483562) : PDist Float := do
 def normal (μ σ : Float) (res := 2147483562) : PDist Float :=
   return μ + σ * (← stdNormal res)
 
+
 def randomList (d : PDist α) (length : Nat) :
     PDist (List α) :=
   match length with
     | 0 => return []
     | n+1 => return (← d) :: (← randomList d n)
+
+def randomListOfList (L : List (PDist α)) : PDist (List α) :=
+  match L with
+    | [] => return []
+    | x :: xs => return (← x) :: (← randomListOfList xs)
