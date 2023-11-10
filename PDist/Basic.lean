@@ -73,3 +73,6 @@ def randomListOfList (L : List (PDist α)) : PDist (List α) :=
   match L with
     | [] => return []
     | x :: xs => return (← x) :: (← randomListOfList xs)
+
+def product (dα : PDist α) (dβ : PDist β) : PDist (α × β) :=
+  return (← dα, ← dβ)
