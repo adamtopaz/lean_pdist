@@ -1,4 +1,5 @@
 import Std.Data.List.Init.Lemmas
+import Mathlib.Data.Matrix.Notation
 import Lean
 
 universe u
@@ -87,3 +88,21 @@ def randomListOfList (L : List (PDist α)) : PDist (List α) :=
 
 def product (dα : PDist α) (dβ : PDist β) : PDist (α × β) :=
   return (← dα, ← dβ)
+
+def finWithProb {n : Nat} (prob : Fin n → Float) (hn : n ≠ 0 := by decide)
+  (res := 2147483562):
+    PDist (Fin n) :=
+  match n with
+    | n+1 => do
+      let prob := fun x => max (prob x) 0
+      let mut tot : Float := 0
+      for h : i in [:n+1] do
+        tot := tot + prob ⟨i, h.2⟩
+      let prob := fun x => prob x / tot
+      let p ← stdUniform res
+      let mut test : Float := 0
+      for h : i in [:n+1] do
+        test := test + prob ⟨i, h.2⟩
+        if p ≤ test then return ⟨i, h.2⟩
+      return ⟨n, Nat.lt.base n⟩
+    | 0 => False.elim <| hn rfl
