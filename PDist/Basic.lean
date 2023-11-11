@@ -61,7 +61,7 @@ def uniform (a b : Float) (res := 2147483562) : PDist Float :=
   return a + (b - a) * (← stdUniform res)
 
 def bernoulliP (p : Float) (res := 2147483562) : PDist Bool :=
-  return (← stdUniform res) ≤ p
+  return (← stdUniform res) < p
 
 def PI : Float :=
   3.14159265358979323846264338327950288419716939937510582097494459230781640628620899862803482534211
