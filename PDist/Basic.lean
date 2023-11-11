@@ -1,5 +1,4 @@
 import Std.Data.List.Init.Lemmas
-import Mathlib.Data.Matrix.Notation
 import Lean
 
 universe u
