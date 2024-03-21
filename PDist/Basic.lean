@@ -1,4 +1,3 @@
-import Std.Data.List.Init.Lemmas
 import Lean
 
 universe u
@@ -36,10 +35,14 @@ def uniformList (L : List α) (hL : L ≠ [] := by decide) : PDist α := do
 
 def uniformListWithProof (L : List α) (hL : L ≠ [] := by decide) :
     PDist ((a : α) ×' (a ∈ L)) := do
+  let rec aux : ∀ (L : List α) (i : Nat) (hi : i < L.length), L.get ⟨i,hi⟩ ∈ L
+    | _::_, 0, _ => .head _
+    | _::l, i+1, _ => .tail _ (aux l _ _)
   match h : L.length with
     | n+1 =>
         let i ← uniformFin (n + 1) Nat.noConfusion
-        return ⟨L[i]' (by simp [h, i.isLt]), List.get_mem _ _ _⟩
+        let hi : i < L.length := by simp [h, i.isLt]
+        return ⟨L.get ⟨i.val,hi⟩, aux _ _ _⟩
     | 0 => False.elim <| hL <| by { induction L ; rfl ; simp at h }
 
 def uniformList? (L : List α) : PDist (Option α) :=
