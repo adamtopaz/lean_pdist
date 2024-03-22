@@ -14,7 +14,7 @@ def randNat (lo hi : Nat) : PDistT M Nat := do
   return out
 
 def randFin (n : Nat) : PDistT M (Fin <| n+1) := do
-  let ⟨out, next⟩ := _root_.randNat (← get) 0 (n+1)
+  let ⟨out, next⟩ := _root_.randNat (← get) 0 n
   set next
   return Fin.ofNat out
 
