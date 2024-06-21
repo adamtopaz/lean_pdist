@@ -39,7 +39,7 @@ abbrev PDist := PDistT Id
 
 namespace PDist
 
-def sample (a : PDist α) : IO α := do
+def sample [Monad M] (a : PDist α) [MonadLiftT (ST IO.RealWorld) M] : M α := do
   let stdgen ← IO.stdGenRef.get
   let (out, next) := a.run stdgen
   IO.stdGenRef.set next
