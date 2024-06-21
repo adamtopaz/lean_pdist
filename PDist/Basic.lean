@@ -48,4 +48,9 @@ def sample [Monad M] (a : PDist α) [MonadLiftT (ST IO.RealWorld) M] : M α := d
 def sampleWith (seed : Nat) (a : PDist α) : α :=
   PDistT.sampleWith seed a
 
+instance [Lean.Eval α] : Lean.Eval (PDist α) where
+  eval f _ := do
+    let a ← (f ()).sample
+    Lean.Eval.eval fun _ => a
+
 end PDist
