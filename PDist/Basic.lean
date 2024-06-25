@@ -23,6 +23,23 @@ def randBool : PDistT M Bool := do
   set next
   return out
 
+def stdUniform (resolution := 2147483562) : PDistT M Float :=
+  return (← randNat 0 (resolution - 1)).toFloat / (resolution - 1).toFloat
+
+def uniform (lo hi : Float) (resolution : Nat := 2147483562) : PDistT M Float := do
+  let i ← PDistT.randNat 0 resolution
+  return lo + (i.toFloat / resolution.toFloat) * (hi - lo)
+
+def weightedIndex (l : List Float) (resolution : Nat := 2147483562) : PDistT M Nat := do
+  let sum : Float := (l.foldr (· + ·) 0)
+  let probs : List Float := l.map fun i => i / sum
+  let p ← stdUniform resolution
+  let mut test : Float := 0
+  for h : i in [:probs.length] do
+    test := test + probs[i]' h.right
+    if p ≤ test then return i
+  return 0
+
 def sampleWith (seed : Nat) (e : PDistT M α) : M α := do
   e.run' (mkStdGen seed)
 
